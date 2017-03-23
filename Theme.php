@@ -39,7 +39,7 @@ class Theme extends BaseMinc\Theme{
 
         $app = App::i();
 
-        $this->jsObject['infoboxFields'] .= ',num_sniic';
+        $this->addSearchQueryFields(['num_sniic']);
 
         $app->hook('template(site.search.<<agent|space|event>>-infobox-new-fields-before):begin', function() use($app) {
             $this->part('infobox-new-fields-before');
