@@ -277,9 +277,6 @@ $url_search_opportunities = $this->searchOpportunitiesUrl;
     </div>
 </article>
 
-
-
-
 <article id="home-opportunities" class="js-page-menu-item home-entity clearfix">
     <div class="box">
         <h1><span class="icon icon-opportunity"></span> Editais</h1>
@@ -316,21 +313,9 @@ $url_search_opportunities = $this->searchOpportunitiesUrl;
                 </div>
             </a>
         <?php endif; ?>
-        <a class="btn btn-accent btn-large add" href="<?php echo $app->createUrl('opportunity', 'create') ?>">Adicionar edital</a>
         <a class="btn btn-accent btn-large" href="<?php echo $url_search_opportunities ?>">Ver tudo</a>
     </div>
 </article>
-
-
-
-
-
-
-
-
-
-
-
 
 <article id="home-developers" class="js-page-menu-item home-entity clearfix">
     <div class="box">
