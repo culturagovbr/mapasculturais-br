@@ -8,6 +8,7 @@ $class_event = 'MapasCulturais\Entities\Event';
 $class_agent = 'MapasCulturais\Entities\Agent';
 $class_space = 'MapasCulturais\Entities\Space';
 $class_project = 'MapasCulturais\Entities\Project';
+$class_opportunity = 'MapasCulturais\Entities\Opportunity';
 
 $class_file = 'MapasCulturais\Entities\File';
 
@@ -19,6 +20,7 @@ $num_spaces             = $this->getNumEntities($class_space);
 //$num_verified_spaces    = $this->getNumEntities($class_space, true);
 $num_projects           = $this->getNumEntities($class_project);
 //$num_verified_projects  = $this->getNumEntities($class_project, true);
+$num_opportunities        = $this->getNumEntities($class_opportunity);
 
 $event_linguagens = array_values($app->getRegisteredTaxonomy($class_event, 'linguagem')->restrictedTerms);
 $agent_areas = array_values($app->getRegisteredTaxonomy($class_agent, 'area')->restrictedTerms);
@@ -31,6 +33,7 @@ sort($space_areas);
 $agent_types = $app->getRegisteredEntityTypes($class_agent);
 $space_types = $app->getRegisteredEntityTypes($class_space);
 $project_types = $app->getRegisteredEntityTypes($class_project);
+$opportunity_types = $app->getRegisteredEntityTypes($class_opportunity);
 
 $agent_img_attributes = $space_img_attributes = $event_img_attributes = $project_img_attributes = 'class="random-feature no-image"';
 
@@ -54,10 +57,16 @@ if($project && $img_url = $this->getEntityFeaturedImageUrl($project)){
     $project_img_attributes = 'class="random-feature" style="background-image: url(' . $img_url . ');"';
 }
 
+$opportunity = $this->getOneEntity($class_opportunity);
+if($project && $img_url = $this->getEntityFeaturedImageUrl($opportunity)){
+    $opportunity_img_attributes = 'class="random-feature" style="background-image: url(' . $img_url . ');"';
+}
+
 $url_search_agents = $this->searchAgentsUrl;
 $url_search_spaces = $this->searchSpacesUrl;
 $url_search_events = $this->searchEventsUrl;
 $url_search_projects = $this->searchProjectsUrl;
+$url_search_opportunities = $this->searchOpportunitiesUrl;
 
 ?>
 <section id="home-watermark">
@@ -78,6 +87,7 @@ $url_search_projects = $this->searchProjectsUrl;
                         <li tabindex="3" id="spaces-filter"  data-entity="space"><span class="icon icon-space"></span> Espaços</li>
                         <li tabindex="4" id="events-filter"  data-entity="event"><span class="icon icon-event"></span> Eventos</li>
                         <li tabindex="5" id="projects-filter" data-entity="project" data-searh-url-template="<?php echo $app->createUrl('site','search'); ?>##(global:(enabled:({{entity}}:!t),filterEntity:{{entity}},viewMode:list),{{entity}}:(keyword:'{{keyword}}'))"><span class="icon icon-project"></span> Projetos</li>
+                        <li tabindex="6" id="opportunities-filter" data-entity="opportunity" data-searh-url-template="<?php echo $app->createUrl('site','search'); ?>##(global:(enabled:({{entity}}:!t),filterEntity:{{entity}},viewMode:list),{{entity}}:(keyword:'{{keyword}}'))"><span class="icon icon-project"></span> Editais</li>
                     </ul>
                 </div>
             </div>
@@ -266,6 +276,62 @@ $url_search_projects = $this->searchProjectsUrl;
         <a class="btn btn-accent btn-large" href="<?php echo $url_search_projects ?>">Ver tudo</a>
     </div>
 </article>
+
+
+
+
+<article id="home-opportunities" class="js-page-menu-item home-entity clearfix">
+    <div class="box">
+        <h1><span class="icon icon-opportunity"></span> Editais</h1>
+        <div class="clearfix">
+            <div class="statistics">
+                <div class="statistic"><?php echo $num_opportunities; ?></div>
+                <div class="statistic-label">editais cadastrados</div>
+            </div>
+
+        </div>
+        <p><?php $this->dict('home: opportunities') ?></p>
+        <h4>Encontre editais por</h4>
+        <ul class="abas clearfix">
+            <li class="active"><a href="#opportunity-types">Tipo</a></li>
+        </ul>
+        <div id="opportunity-types"  class="tag-box">
+            <div>
+                <?php foreach ($opportunity_types as $t): ?>
+                    <a class="tag" href="<?php echo $app->createUrl('site', 'search') ?>##(opportunity:(types:!(<?php echo $t->id ?>)),global:(enabled:(opportunity:!t),filterEntity:project,viewMode:list))"><?php echo $t->name ?></a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <?php if($opportunity): ?>
+            <a href="<?php echo $opportunity->singleUrl ?>">
+                <div <?php echo $opportunity_img_attributes;?>>
+                    <div class="feature-content">
+                        <h3>destaque</h3>
+                        <h2><?php echo $opportunity->name?></h2>
+                        <p><?php echo $opportunity->shortDescription ?></p>
+                    </div>
+                </div>
+            </a>
+        <?php endif; ?>
+        <a class="btn btn-accent btn-large add" href="<?php echo $app->createUrl('opportunity', 'create') ?>">Adicionar edital</a>
+        <a class="btn btn-accent btn-large" href="<?php echo $url_search_opportunities ?>">Ver tudo</a>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
 <article id="home-developers" class="js-page-menu-item home-entity clearfix">
     <div class="box">
         <h1><span class="icon icon-developers"></span> Desenvolvedores</h1>
@@ -295,10 +361,15 @@ $url_search_projects = $this->searchProjectsUrl;
             <a class="icon icon-project" href="#home-projects"></a>
             <span class="nav-title">Projetos</span>
         </li>
+        <li id="nav-opportunities">
+            <a class="icon icon-opportunity" href="#home-opportunities"></a>
+            <span class="nav-title">Editais</span>
+        </li>
         <li id="nav-developers">
             <a class="icon icon-developers" href="#home-developers"></a>
             <span class="nav-title">Desenvolvedores</span>
         </li>
+
         <li><a class="down icon icon-select-arrow" href="#"></a></li>
     </ul>
 </nav>
